@@ -57,6 +57,13 @@ setMethod("fleets", "FIMSFrame", function(x) x@fleets)
 
 setGeneric("fleet_names", function(x) standardGeneric("fleet_names"))
 setMethod("fleet_names", "FIMSFrame", function(x) x@fleet_names)
+# should be an external setter method so they don't have to be
+# provided to the constructor
+setGeneric("fleet_names<-", function(x, value) standardGeneric("fleet_names<-"))
+setMethod("fleet_names<-", "FIMSFrame", function(x, value) {
+  x@fleet_names <- value
+  x
+})
 
 setGeneric("nyrs", function(x) standardGeneric("nyrs"))
 setMethod("nyrs", "FIMSFrame", function(x) x@nyrs)
@@ -243,7 +250,7 @@ setValidity(
 
     if (NROW(object@data) == 0) {
       errors <- c(errors, "data must have at least one row")
-    }
+    } 
 
     # Check columns
     if (!"type" %in% colnames(object@data)) {
