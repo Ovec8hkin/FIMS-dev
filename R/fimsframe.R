@@ -15,6 +15,7 @@ setClass(
   slots = c(
     data = "data.frame", # can use c( ) or list here.
     fleets = "numeric",
+    fleet_names = "character",
     nyrs = "integer",
     start_year = "integer",
     end_year = "integer"
@@ -53,6 +54,9 @@ setMethod("get_data", "FIMSFrame", function(x) x@data)
 # example: so we can call fleets(obj) instead of obj@fleets
 setGeneric("fleets", function(x) standardGeneric("fleets"))
 setMethod("fleets", "FIMSFrame", function(x) x@fleets)
+
+setGeneric("fleet_names", function(x) standardGeneric("fleet_names"))
+setMethod("fleet_names", "FIMSFrame", function(x) x@fleet_names)
 
 setGeneric("nyrs", function(x) standardGeneric("nyrs"))
 setMethod("nyrs", "FIMSFrame", function(x) x@nyrs)
@@ -317,7 +321,14 @@ FIMSFrame <- function(data) {
   years <- start_year:end_year
 
   # Get the fleets represented in the data
-  fleets <- unique(data[["name"]])[grep("fleet", unique(data[["name"]]))]
+  # 
+  # NOTE: @ovec8hkin doesn't think restricting the `fleets` object to only consider names
+  # that begin with 'fleet' is a good idea. If this is desired than that should
+  # be clearly documented, and being able to set human readable fleet names is 
+  # even more desired. Should also delineate between "fleets" ('fleet*') and 
+  # "surveys" ('survey*').
+  fleet_names <- unique(data[["name"]])
+  fleets <- fleet_names[grep("fleet", unique(data[["name"]]))]
   fleets <- as.numeric(unlist(lapply(strsplit(fleets, "fleet"), function(x) x[2])))
   nfleets <- length(fleets)
   # Make empty NA data frames in the format needed to pass to FIMS
@@ -326,6 +337,7 @@ FIMSFrame <- function(data) {
   out <- new("FIMSFrame",
     data = data,
     fleets = fleets,
+    fleet_names = fleet_names,
     nyrs = nyrs,
     start_year = start_year,
     end_year = end_year
@@ -341,8 +353,16 @@ FIMSFrameAge <- function(data) {
   end_year <- as.integer(strsplit(max(data[["dateend"]], na.rm = TRUE), "-")[[1]][1])
   nyrs <- as.integer(end_year - start_year + 1)
   years <- start_year:end_year
+
   # Get the fleets represented in the data
-  fleets <- unique(data[["name"]])[grep("fleet", unique(data[["name"]]))]
+  # 
+  # NOTE: @ovec8hkin doesn't dont think restricting the `fleets` object to only consider names
+  # that begin with 'fleet' is a good idea. If this is desired than that should
+  # be clearly documented, and being able to set human readable fleet names is 
+  # even more desired. Should also delineate between "fleets" ('fleet*') and 
+  # "surveys" ('survey*').
+  fleet_names <- unique(data[["name"]])
+  fleets <- fleet_names[grep("fleet", unique(data[["name"]]))]
   fleets <- as.numeric(unlist(lapply(strsplit(fleets, "fleet"), function(x) x[2])))
   nfleets <- length(fleets)
   # Make empty NA data frames in the format needed to pass to FIMS
@@ -356,6 +376,7 @@ FIMSFrameAge <- function(data) {
   out <- new("FIMSFrameAge",
     data = data,
     fleets = fleets,
+    fleet_names = fleet_names,
     nyrs = nyrs,
     start_year = start_year,
     end_year = end_year,
