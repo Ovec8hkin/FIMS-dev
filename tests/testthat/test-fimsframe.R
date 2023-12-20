@@ -28,6 +28,7 @@ test_that("Can create the S4 FIMSFrame classes", {
 test_that("Accessors work as expected in FIMSFrame", {
   expect_s3_class(get_data(fims_frame), "data.frame")
 
+  expect_vector(fleet_names(fims_frame), ptype= character())
   expect_vector(fleets(fims_frame), ptype = numeric())
 
   expect_type(nyrs(fims_frame), "integer")
@@ -43,6 +44,7 @@ test_that("Accessors work as expected in FIMSFrame", {
 test_that("Accessors work as expected in FIMSFrameAge", {
   expect_s3_class(get_data(age_frame), "data.frame")
 
+  expect_vector(fleet_names(age_frame), ptype = character())
   expect_vector(fleets(age_frame), ptype = numeric())
 
   expect_type(nyrs(age_frame), "integer")
@@ -65,6 +67,17 @@ test_that("Accessors work as expected in FIMSFrameAge", {
   expect_vector(m_weightatage(age_frame), ptype = numeric())
 
   expect_vector(m_ages(age_frame), ptype = integer())
+})
+
+test_that("fleet_names setter method works", {
+    
+    empty_obj <- fims_frame
+    
+    new_fleet_names <- c("fleet1" = "Fleet 1", "survey1" = "Survey 1")
+    fleet_names(empty_obj) <- new_fleet_names
+
+    expect_vector(fleet_names(empty_obj), size=2)
+    expect_equal(fleet_names(empty_obj), new_fleet_names)
 })
 
 test_that("Show method works as expected", {
