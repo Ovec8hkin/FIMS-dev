@@ -251,13 +251,13 @@ setValidity(
     if (!"dateend" %in% colnames(object@data)) {
       errors <- c(errors, "data must contain 'dateend'")
     }
-    if (!"dateend" %in% colnames(object@data)) {
+    if (!"value" %in% colnames(object@data)) {
       errors <- c(errors, "data must contain 'value'")
     }
-    if (!"dateend" %in% colnames(object@data)) {
+    if (!"unit" %in% colnames(object@data)) {
       errors <- c(errors, "data must contain 'unit'")
     }
-    if (!"dateend" %in% colnames(object@data)) {
+    if (!"uncertainty" %in% colnames(object@data)) {
       errors <- c(errors, "data must contain 'uncertainty'")
     }
 
